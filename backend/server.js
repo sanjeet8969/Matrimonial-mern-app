@@ -47,9 +47,9 @@ app.set('io', io);
 app.use(helmet());
 app.use(cors({
   origin: [
-    'http://localhost:5173',
-    'https://your-frontend-name.onrender.com', // Add after deploying frontend
-    'https://your-custom-domain.com' // If you have a custom domain
+   
+    'https://matrimonial-mern-app-1.onrender.com', // Add after deploying frontend
+    
   ],
   credentials: true
 }));
