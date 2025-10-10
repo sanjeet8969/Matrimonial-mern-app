@@ -25,7 +25,10 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.user);
     } catch (error) {
       console.error('Load user error:', error);
-      logout();
+      // ✅ Don't logout on error - just clear invalid token
+      setToken(null);
+      setUser(null);
+      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }
@@ -62,7 +65,13 @@ export const AuthProvider = ({ children }) => {
   const register = async (email, password, confirmPassword) => {
     try {
       const response = await authApi.register(email, password, confirmPassword);
-      toast.success(response.data.message);
+      
+      // ✅ Show OTP in alert for development
+      if (response.data.otp) {
+        alert('✅ Registration Success!\n\n🔢 Your OTP: ' + response.data.otp + '\n\n(This is only shown in development)');
+      }
+      
+      toast.success(response.data.message || 'Registration successful!');
       return { success: true, userId: response.data.userId };
     } catch (error) {
       const message = error.response?.data?.message || 'Registration failed';
@@ -92,7 +101,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('token');
     toast.success('Logged out successfully');
-    navigate('/login');
+    navigate('/'); // ✅ CHANGED: Go to home page, not login
   };
 
   const updateUser = (updatedUser) => {
