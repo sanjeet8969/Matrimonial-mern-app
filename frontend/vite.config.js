@@ -18,6 +18,19 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false
-  }
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+          'animation-vendor': ['framer-motion', 'gsap'],
+        },
+      },
+    },
+  },
+  optimizeDeps: {
+    exclude: ['@react-three/fiber', '@react-three/drei'],
+  },
 });

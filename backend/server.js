@@ -46,7 +46,11 @@ app.set('io', io);
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: [
+    'http://localhost:5173',
+    'https://your-frontend-name.onrender.com', // Add after deploying frontend
+    'https://your-custom-domain.com' // If you have a custom domain
+  ],
   credentials: true
 }));
 app.use(express.json());
