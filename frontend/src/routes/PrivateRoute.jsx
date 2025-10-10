@@ -2,10 +2,9 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
 
 const PrivateRoute = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -15,18 +14,16 @@ const PrivateRoute = () => {
     );
   }
 
+  // Only redirect to login if NOT authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: window.location.pathname }} replace />;
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Navbar />
-      <main className="flex-grow">
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
+      <Outlet />
+    </>
   );
 };
 
