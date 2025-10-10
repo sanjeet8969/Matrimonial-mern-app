@@ -72,7 +72,7 @@ const AppRoutes = () => {
 
       {/* Admin Routes */}
       <Route element={<AdminRoute />}>
-        <Route path="/admin/*" element={<AdminPanel />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Route>
 
       {/* 404 */}
