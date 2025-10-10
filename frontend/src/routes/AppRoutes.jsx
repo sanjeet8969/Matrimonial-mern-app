@@ -27,6 +27,7 @@ import Settings from '../pages/Settings';
 import AdminPanel from '../pages/AdminPanel';
 import NotFound from '../pages/NotFound';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
+import Navbar from '../components/common/Navbar';
 
 const AppRoutes = () => {
   const { loading } = useAuth();
@@ -41,18 +42,20 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
+      {/* Public Routes - NO LOGIN REQUIRED */}
+      <Route path="/" element={<><Navbar /><Home /></>} />
+      <Route path="/about" element={<><Navbar /><About /></>} />
+      <Route path="/contact" element={<><Navbar /><Contact /></>} />
+      <Route path="/privacy-policy" element={<><Navbar /><PrivacyPolicy /></>} />
+      
+      {/* Auth Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/verify-otp" element={<OTPVerification />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-      {/* Private Routes */}
+      {/* Private Routes - LOGIN REQUIRED */}
       <Route element={<PrivateRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile/create" element={<ProfileCreation />} />
@@ -67,7 +70,7 @@ const AppRoutes = () => {
         <Route path="/settings" element={<Settings />} />
       </Route>
 
-      {/* Admin Routes - Use /* to match nested routes */}
+      {/* Admin Routes */}
       <Route element={<AdminRoute />}>
         <Route path="/admin/*" element={<AdminPanel />} />
       </Route>
