@@ -3,18 +3,15 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
+  plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
-        changeOrigin: true
-      }
-    }
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',
@@ -23,20 +20,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
+          // keep React stuff in one vendor chunk
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+          // animations in another
           'animation-vendor': ['framer-motion', 'gsap'],
         },
       },
-    },
-  },
-  optimizeDeps: {
-    include: ['react-dom'],
-    exclude: ['@react-three/fiber', '@react-three/drei'],
-  },
-  resolve: {
-    alias: {
-      'react-dom/client': 'react-dom',
     },
   },
 });
