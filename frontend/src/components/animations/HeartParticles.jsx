@@ -1,58 +1,62 @@
-import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-
-function Particles() {
-  const particlesRef = useRef();
-  const count = 1000;
-
-  const particles = useMemo(() => {
-    const temp = [];
-    for (let i = 0; i < count; i++) {
-      const x = (Math.random() - 0.5) * 20;
-      const y = (Math.random() - 0.5) * 20;
-      const z = (Math.random() - 0.5) * 20;
-      temp.push(x, y, z);
-    }
-    return new Float32Array(temp);
-  }, [count]);
-
-  useFrame((state) => {
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.05;
-      particlesRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.1) * 0.2;
-    }
-  });
-
-  return (
-    <points ref={particlesRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={particles.length / 3}
-          array={particles}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.1}
-        color="#ff1744"
-        sizeAttenuation
-        transparent
-        opacity={0.8}
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
-  );
-}
+import React, { useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const HeartParticles = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 150 };
+  const x = useSpring(mouseX, springConfig);
+  const y = useSpring(mouseY, springConfig);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    mouseX.set((e.clientX - centerX) * 0.1);
+    mouseY.set((e.clientY - centerY) * 0.1);
+  };
+
   return (
-    <div className="h-64 w-full">
-      <Canvas camera={{ position: [0, 0, 10] }}>
-        <ambientLight intensity={0.5} />
-        <Particles />
-      </Canvas>
+    <div
+      className="relative h-64 w-full bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 flex items-center justify-center overflow-hidden"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        mouseX.set(0);
+        mouseY.set(0);
+      }}
+    >
+      <motion.div
+        style={{ x, y }}
+        animate={{
+          scale: isHovered ? 1.5 : 1,
+          rotate: isHovered ? 360 : 0,
+        }}
+        transition={{ duration: 0.5 }}
+        className="text-8xl cursor-pointer"
+      >
+        ❤️
+      </motion.div>
+
+      {Array.from({ length: 12 }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute text-2xl"
+          initial={{ opacity: 0.5 }}
+          animate={{
+            x: Math.cos((i * 2 * Math.PI) / 12) * (isHovered ? 150 : 100),
+            y: Math.sin((i * 2 * Math.PI) / 12) * (isHovered ? 150 : 100),
+            rotate: 360,
+            opacity: isHovered ? 1 : 0.3,
+          }}
+          transition={{ duration: 1, repeat: Infinity }}
+        >
+          💖
+        </motion.div>
+      ))}
     </div>
   );
 };
