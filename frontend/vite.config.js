@@ -31,6 +31,12 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
+    include: ['react-dom'],
     exclude: ['@react-three/fiber', '@react-three/drei'],
+  },
+  resolve: {
+    alias: {
+      'react-dom/client': 'react-dom',
+    },
   },
 });
