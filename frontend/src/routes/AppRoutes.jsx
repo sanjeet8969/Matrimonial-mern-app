@@ -67,9 +67,9 @@ const AppRoutes = () => {
         <Route path="/settings" element={<Settings />} />
       </Route>
 
-      {/* Admin Routes */}
+      {/* Admin Routes - Use /* to match nested routes */}
       <Route element={<AdminRoute />}>
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/admin/*" element={<AdminPanel />} />
       </Route>
 
       {/* 404 */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import Navbar from '../components/common/Navbar';
 
 const AdminRoute = () => {
   const { user, isAuthenticated, loading } = useAuth();
@@ -21,7 +22,14 @@ const AdminRoute = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  return <Outlet />;
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+    </div>
+  );
 };
 
 export default AdminRoute;
